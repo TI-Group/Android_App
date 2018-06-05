@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <stroke android:width="0.5dip" android:color="#ff999999" />
+            <solid android:color="@color/jd_fridge_app_white_bg_color" />
+            <size android:height="0.5dip" />
+            <corners android:radius="2.0dip" />
+        </shape>
+    </item>
+</layer-list>
