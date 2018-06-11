@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         android:name=".Application.Ifridge_application">
         <activity
-            android:name=".MainActivity">
+            android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".register.InputMessageCodeActivity" android:screenOrientation="portrait"/>
         <activity android:name=".register.PhoneRegisterActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".SplashActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity" android:screenOrientation="portrait"/>
         <activity android:name=".LoginActivity" android:screenOrientation="portrait"/>
         <activity android:name=".register.SetPasswordActivity" android:screenOrientation="portrait"/>
     </application>

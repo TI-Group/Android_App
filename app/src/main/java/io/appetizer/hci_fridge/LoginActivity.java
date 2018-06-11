@@ -7,7 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import io.appetizer.hci_fridge.register.PhoneRegisterActivity;
+import io.appetizer.hci_fridge.util.Urlpath;
+import io.appetizer.hci_fridge.util.okhttpManager;
 
 
 /**
@@ -20,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView userName, passWord;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private okhttpManager manager = new okhttpManager();
 
 
 
@@ -40,19 +45,24 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = userName.getText().toString();
-                String password = passWord.getText().toString();
-                int result = validate(username , password);
-                if(result == 0){
-                    editor.putString("username",username);
-                    editor.putString("password",password);
-                    editor.commit();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                }
-                else{
-                    //Toast.makeText(getApplicationContext(), "wrong username or wrong password", Toast.LENGTH_SHORT).show();
-                }
+                final String username = userName.getText().toString();
+                final String password = passWord.getText().toString();
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        int result = validate(username , password);
+                        if(result == 0){
+                            editor.putString("username",username);
+                            editor.putString("password",password);
+                            editor.commit();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                        }
+                        else{
+                            //Toast.makeText(getApplicationContext(), "wrong username or wrong password", Toast.LENGTH_SHORT).show();
+                        }
+                    }}).start();
+
 
             }
         });
@@ -65,7 +75,21 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
     private int validate(String username, String password){
-        return 0;
+        try{
+            String url = Urlpath.loginUrl+"?username="+username+"&password="+password;
+            String jsonstrs = "";
+            String result = manager.sendStringByPost(url, jsonstrs);
+            JSONObject json = new JSONObject(result);
+            String userid = json.getString("user_id");
+            String token = json.getString("token");
+            if(Integer.parseInt(userid)!=0) return 0;
+            else return -1;
+        }catch (Throwable e){
+            e.printStackTrace();
+            return -1;
+        }
+
+
     }
 
 }

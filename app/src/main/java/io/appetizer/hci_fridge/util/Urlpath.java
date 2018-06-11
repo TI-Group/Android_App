@@ -7,5 +7,7 @@ package io.appetizer.hci_fridge.util;
 public class Urlpath {
     public static String ip = "http://120.78.218.52:8080";
 
-    public static String loginUrl = ip+"/fridge/userAction/userSignup";
+    public static String registerUrl = ip+"/fridge/userAction/userSignup";
+    public static String loginUrl = ip+"/fridge/userAction/userLogin";
+
 }
