@@ -179,9 +179,10 @@
     <color name="vpi__bright_foreground_holo_light">@color/vpi__background_holo_dark</color>
     <color name="vpi__bright_foreground_inverse_holo_dark">@color/vpi__bright_foreground_holo_light</color>
     <color name="vpi__bright_foreground_inverse_holo_light">@color/vpi__bright_foreground_holo_dark</color>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorPrimary">#58c178</color>
+    <color name="colorPrimaryDark">#58b178</color>
+    <color name="colorAccent">#fff9953a</color>
     <color name="white">#FFFFFF</color>
     <color name="green">#45C01A</color>
     <color name="gray">#999999</color>
