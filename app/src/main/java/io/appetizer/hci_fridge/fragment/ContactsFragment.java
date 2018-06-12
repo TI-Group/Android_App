@@ -47,6 +47,8 @@ public class ContactsFragment extends Fragment {
 
         WebView webView = getActivity().findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setAllowFileAccessFromFileURLs(true);
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl("http://h5.izhangchu.com");
     }
