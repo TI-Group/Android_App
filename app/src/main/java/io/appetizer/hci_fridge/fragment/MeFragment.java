@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +50,12 @@ public class MeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Toolbar toolbar = getActivity().findViewById(R.id.meToolBar);
+        toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.white));
+        toolbar.setTitle("我的");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+
         scan_code_button = getActivity().findViewById(R.id.scan_code_btn);
         scan_code_button.setOnClickListener(new View.OnClickListener() {
             @Override

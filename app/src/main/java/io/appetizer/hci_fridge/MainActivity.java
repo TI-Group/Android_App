@@ -1,9 +1,11 @@
 package io.appetizer.hci_fridge;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -18,7 +20,7 @@ import io.appetizer.hci_fridge.fragment.MeFragment;
 import io.appetizer.hci_fridge.fragment.fridgeFragment;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity{
     private ViewPager viewPager;
     private RadioGroup radioGroup;
     private RadioButton rbChat, rbContacts, rbDiscovery, rbMe;
@@ -80,7 +82,7 @@ public class MainActivity extends FragmentActivity {
         //ViewPager设置适配器
         viewPager.setAdapter(new FragAdapter(getSupportFragmentManager(), alFragment));
         //ViewPager显示第一个Fragment
-        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(0);
         //ViewPager页面切换监听
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
