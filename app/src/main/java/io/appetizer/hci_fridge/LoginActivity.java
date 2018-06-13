@@ -52,9 +52,6 @@ public class LoginActivity extends AppCompatActivity {
                     public void run() {
                         int result = validate(username , password);
                         if(result == 0){
-                            editor.putString("username",username);
-                            editor.putString("password",password);
-                            editor.commit();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                         }
@@ -82,7 +79,12 @@ public class LoginActivity extends AppCompatActivity {
             JSONObject json = new JSONObject(result);
             String userid = json.getString("user_id");
             String token = json.getString("token");
-            if(Integer.parseInt(userid)!=0) return 0;
+            if(Integer.parseInt(userid)!=0) {
+                editor.putString("userid",userid);
+                editor.putString("token",token);
+                editor.commit();
+                return 0;
+            }
             else return -1;
         }catch (Throwable e){
             e.printStackTrace();

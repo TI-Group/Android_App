@@ -20,9 +20,9 @@ public class SplashActivity extends AppCompatActivity {
         try{
             sharedPreferences = getSharedPreferences("hci_fridge",MODE_PRIVATE);
             editor = sharedPreferences.edit();
-            String username = sharedPreferences.getString("username", null);
-            String password = sharedPreferences.getString("password", null);
-            if(username!=null&&password!=null){
+            String userid = sharedPreferences.getString("userid", null);
+            String token = sharedPreferences.getString("token", null);
+            if(userid!=null&&token!=null){
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivityForResult(intent, 0);
             }
