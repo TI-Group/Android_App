@@ -8,13 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
-
 import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
 
@@ -26,10 +24,12 @@ import io.appetizer.hci_fridge.R;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> {
 
     private Context context;
+    private OnItemClickListener mOnItemClickListener;
 
-    private List<Integer> data;
 
-    public FoodAdapter(Context context, List<Integer> data) {
+    private List<Foodinfo> data;
+
+    public FoodAdapter(Context context, List<Foodinfo> data) {
         this.context = context;
         this.data = data;
     }
@@ -41,27 +41,90 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.imageView.setImageResource(this.data.get(position));
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+        Foodinfo food = data.get(position);
+        holder.itemName.setText(food.getName());
+        holder.itemNum.setText(food.getNum()+"");
+        holder.itemTime.setText(food.getTime());
+        holder.itemImage.setImageResource(food.getImageId());
         if (position % 2 == 0) {
-            holder.imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
+            holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
         } else {
-            holder.imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
+            holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
+        }
+        if(mOnItemClickListener != null) {
+            /**
+             * 这里加了判断，itemViewHolder.itemView.hasOnClickListeners()
+             * 目的是减少对象的创建，如果已经为view设置了click监听事件,就不用重复设置了
+             * 不然每次调用onBindViewHolder方法，都会创建两个监听事件对象，增加了内存的开销
+             */
+            if(!holder.itemView.hasOnClickListeners()) {
+                Log.e("ListAdapter", "setOnClickListener");
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = holder.getPosition();
+                        mOnItemClickListener.onItemClick(v, pos);
+                    }
+                });
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int pos = holder.getPosition();
+                        mOnItemClickListener.onItemLongClick(v, pos);
+                        return true;
+                    }
+                });
+            }
         }
     }
+
+
 
     @Override
     public int getItemCount() {
         return this.data.size();
     }
 
+    /**
+     * 移除指定位置元素
+     * @param position
+     * @return
+     */
+    public String remove(int position) {
+        if(position > data.size()-1) {
+            return null;
+        }
+        Foodinfo value = data.remove(position);
+        notifyItemRemoved(position);
+        return value.toString();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    /**
+     * 处理item的点击事件和长按事件
+     */
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int position);
+        public void onItemLongClick(View view, int position);
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imageView;
+        private ImageView itemImage;
+        private TextView itemName;
+        private TextView itemNum;
+        private TextView itemTime;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.imageView = (ImageView) itemView.findViewById(R.id.imageView1);
+            this.itemImage = (ImageView) itemView.findViewById(R.id.itemImage);
+            this.itemName = (TextView) itemView.findViewById(R.id.itemName);
+            this.itemNum = (TextView) itemView.findViewById(R.id.itemNum);
+            this.itemTime = (TextView) itemView.findViewById(R.id.itemTime);
         }
     }
 

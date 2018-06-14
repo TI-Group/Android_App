@@ -38,22 +38,81 @@ import io.appetizer.hci_fridge.adapter.FoodAdapter;
  * A simple {@link Fragment} subclass.
  */
 public class fridgeFragment extends Fragment {
-    private RecyclerView recyclerView;
+    private RecyclerView fruit,vegetable;
     private FoodAdapter adapter;
     private View view;
+    private Context context;
+    private List<Foodinfo> foodList = new ArrayList<Foodinfo>();
+
+    private void initFood(){
+        Foodinfo apple = new Foodinfo("apple",2.0, R.drawable.ic_tab1_s,"01");
+        Foodinfo banana = new Foodinfo("banana",2.0,R.drawable.ic_tab2_s,"01");
+        Foodinfo orange = new Foodinfo("orange",2.0,R.drawable.ic_tab3_s,"01");
+        Foodinfo pear = new Foodinfo("pear",2.0,R.drawable.ic_tab4_s,"01");
+        Foodinfo peach = new Foodinfo("peach",2.0,R.drawable.ic_tab_menu_selected,"01");
+        foodList.add(apple);
+        foodList.add(banana);
+        foodList.add(orange);
+        foodList.add(peach);
+        foodList.add(pear);
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.frag_fridge, container, false);
+        context = this.getContext();
+        initFood();
 
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        fruit = (RecyclerView) view.findViewById(R.id.fruit);
+        vegetable = (RecyclerView) view.findViewById(R.id.vegetable);
 
-        adapter = new FoodAdapter(this.getContext(), createData());
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 5));
-        recyclerView.setAdapter(adapter);
+        adapter = new FoodAdapter(this.getContext(), foodList);
+
+        fruit.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, final int position) {
+
+                View promptsView = inflater.inflate(R.layout.dialog,null);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                // set prompts.xml to alertdialog builder
+                alertDialogBuilder.setView(promptsView);
+                final EditText userInput = (EditText) promptsView.findViewById(R.id.editTextResult);
+                // set dialog message
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                adapter.remove(position); //remove the item
+
+            }
+        });
+        fruit.setAdapter(adapter);
+        vegetable.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        vegetable.setAdapter(adapter);
         return view;
     }
     private List<Integer> createData() {

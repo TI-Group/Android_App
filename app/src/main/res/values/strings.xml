@@ -432,4 +432,6 @@
     <string name="year">年</string>
     <string name="title_login">登陆/注册</string>
     <string name="title_register">注册</string>
+    <string name="fruit">水果</string>
+    <string name="vegetable">蔬菜</string>
 </resources>
