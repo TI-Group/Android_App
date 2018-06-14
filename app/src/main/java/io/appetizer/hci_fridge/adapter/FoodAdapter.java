@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.List;
 import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
+import io.appetizer.hci_fridge.View.RoundedRectProgressBar;
 
 
 /**
@@ -45,13 +46,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
         Foodinfo food = data.get(position);
         holder.itemName.setText(food.getName());
         holder.itemNum.setText(food.getNum()+"");
-        holder.itemTime.setText(food.getTime());
+        int percent = 50;
+        holder.itemTime.setProgress(percent);
         holder.itemImage.setImageResource(food.getImageId());
-        if (position % 2 == 0) {
-            holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
-        } else {
-            holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
-        }
+        //if (position % 2 == 0) {
+        //    holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
+        //} else {
+        //    holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
+        //}
         if(mOnItemClickListener != null) {
             /**
              * 这里加了判断，itemViewHolder.itemView.hasOnClickListeners()
@@ -117,14 +119,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
         private ImageView itemImage;
         private TextView itemName;
         private TextView itemNum;
-        private TextView itemTime;
+        private RoundedRectProgressBar itemTime;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.itemImage = (ImageView) itemView.findViewById(R.id.itemImage);
             this.itemName = (TextView) itemView.findViewById(R.id.itemName);
             this.itemNum = (TextView) itemView.findViewById(R.id.itemNum);
-            this.itemTime = (TextView) itemView.findViewById(R.id.itemTime);
+            this.itemTime = (RoundedRectProgressBar) itemView.findViewById(R.id.itemTime);
         }
     }
 

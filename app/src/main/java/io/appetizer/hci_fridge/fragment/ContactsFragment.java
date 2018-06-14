@@ -50,6 +50,6 @@ public class ContactsFragment extends Fragment {
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setAllowFileAccessFromFileURLs(true);
         webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl("http://h5.izhangchu.com");
+        webView.loadUrl("http://h5.izhangchu.com/search_index");
     }
 }

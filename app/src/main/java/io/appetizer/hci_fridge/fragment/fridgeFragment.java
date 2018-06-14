@@ -71,7 +71,7 @@ public class fridgeFragment extends Fragment {
 
         adapter = new FoodAdapter(this.getContext(), foodList);
 
-        fruit.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        fruit.setLayoutManager(new GridLayoutManager(getContext(), 4));
         adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
@@ -111,7 +111,7 @@ public class fridgeFragment extends Fragment {
             }
         });
         fruit.setAdapter(adapter);
-        vegetable.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        vegetable.setLayoutManager(new GridLayoutManager(getContext(), 4));
         vegetable.setAdapter(adapter);
         return view;
     }
@@ -127,4 +127,13 @@ public class fridgeFragment extends Fragment {
         return data;
     }
 
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        android.support.v7.widget.Toolbar toolbar = getActivity().findViewById(R.id.fridgeToolBar);
+        toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.white));
+        toolbar.setTitle("食物");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    }
 }
