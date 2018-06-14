@@ -47,6 +47,12 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.1'
     implementation 'com.github.yuzhiqiang1993:zxing:2.1.8'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.android.support:support-v4:26.3.0'
+
+    implementation 'com.github.lovetuzitong:MultiImageSelector:1.2'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
