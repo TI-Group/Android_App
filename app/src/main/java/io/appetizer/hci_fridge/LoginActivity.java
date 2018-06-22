@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 return 0;
             }
             else return -1;
-        }catch (Throwable e){
+        }catch (org.json.JSONException e){
             e.printStackTrace();
             return -1;
         }

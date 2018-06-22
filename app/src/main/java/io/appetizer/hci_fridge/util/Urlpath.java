@@ -9,5 +9,8 @@ public class Urlpath {
 
     public static String registerUrl = ip+"/fridge/userAction/userSignup";
     public static String loginUrl = ip+"/fridge/userAction/userLogin";
+    public static String getItemsUrl = ip+"/fridge/fridgeAction/getItems";
+    public static String changeItemUrl = ip+"/fridge/fridgeAction/changeItem";
+
 
 }

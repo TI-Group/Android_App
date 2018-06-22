@@ -1,15 +1,12 @@
 package io.appetizer.hci_fridge.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -48,7 +45,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
         holder.itemNum.setText(food.getNum()+"");
         int percent = 50;
         holder.itemTime.setProgress(percent);
-        holder.itemImage.setImageResource(food.getImageId());
+        holder.itemImage.setImageResource(R.drawable.ic_tab1_s);
         //if (position % 2 == 0) {
         //    holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
         //} else {

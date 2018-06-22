@@ -6,14 +6,14 @@ package io.appetizer.hci_fridge.Model;
 
 public class Foodinfo {
     private String name;
-    private double num;
+    private int num;
     private String time;
-    private int imageId;
+    private int itemID;
 
-    public Foodinfo(String name, double num, int imageId, String time){
+    public Foodinfo(String name, int num, int itemID, String time){
         this.name = name;
         this.num = num;
-        this.imageId = imageId;
+        this.itemID = itemID;
         this.time = time;
     }
 
@@ -27,8 +27,8 @@ public class Foodinfo {
         return num;
     }
 
-    public int getImageId(){
-        return imageId;
+    public int getItemID(){
+        return itemID;
     }
 
     public String getTime(){
@@ -39,12 +39,12 @@ public class Foodinfo {
         this.name = name;
     }
 
-    public void setNum(double num){
+    public void setNum(int num){
         this.num = num;
     }
 
-    public void setImageId(int image){
-        this.imageId = imageId;
+    public void setItemID(int image){
+        this.itemID = itemID;
     }
 
     public void setTime(String time){
