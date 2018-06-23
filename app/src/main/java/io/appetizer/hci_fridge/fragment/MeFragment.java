@@ -25,10 +25,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.youtu.Youtu;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.android.Intents;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,6 +40,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +58,10 @@ import static android.content.Context.MODE_PRIVATE;
  * A simple {@link Fragment} subclass.
  */
 public class MeFragment extends Fragment {
+    public static final String APP_ID = "10136384";
+    public static final String SECRET_ID = "AKID06ACILoIE6tsofBb6WrAQcjSFxeIKRuL";
+    public static final String SECRET_KEY = "Y4VuJuSxPl3XyKxdHsNqmmquwunO6lQS";
+    public static final String USER_ID = "1823997989";
 
     private static final String TAG = "MeFragment";
     // scan 2d code
@@ -120,7 +128,7 @@ public class MeFragment extends Fragment {
             public void onClick(View view) {
                 List<Fragment> list = getFragmentManager().getFragments();
                 MultiImageSelector.create(getContext())
-                        .showCamera(true) // 是否显示相机. 默认为显示
+                        .showCamera(false) // 是否显示相机. 默认为显示
                         .single() // 单选模式
                         .start(getFragmentManager().getFragments().get(0), REQUEST_IMAGE);
             }
@@ -160,11 +168,33 @@ public class MeFragment extends Fragment {
         config.setPlayBeep(true);//是否播放扫描声音 默认为true
         config.setShake(true);//是否震动  默认为true
         config.setDecodeBarCode(false);//是否扫描条形码 默认为true
-        //config.setReactColor(R.color.colorAccent);//设置扫描框四个角的颜色 默认为淡蓝色
+        config.setReactColor(R.color.colorPrimary);//设置扫描框四个角的颜色 默认为淡蓝色
         //config.setFrameLineColor(R.color.colorAccent);//设置扫描框边框颜色 默认无色
         config.setFullScreenScan(false);//是否全屏扫描  默认为true  设为false则只会在扫描框中扫描
         intent.putExtra(Constant.INTENT_ZXING_CONFIG, config);
         startActivityForResult(intent, REQUEST_CODE_SCAN);
+    }
+
+    // build a connection between user's face and the fridge with id fridge_id
+    private void upload_portrait(final String fridge_id){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File fileDir = getContext().getFilesDir();
+                File myPortrait = new File(fileDir,"portrait");
+                Youtu faceYoutu = new Youtu(APP_ID, SECRET_ID, SECRET_KEY, Youtu.API_YOUTU_END_POINT,USER_ID);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hci_fridge",MODE_PRIVATE);
+                String user_id = sharedPreferences.getString("userid", "");
+                List<String> group = new ArrayList<>();
+                group.add(fridge_id);
+                try {
+                    JSONObject object = faceYoutu.NewPerson(myPortrait.getPath(), user_id, group);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "run: upload success");
+            }
+        }).start();
     }
 
 
@@ -190,9 +220,13 @@ public class MeFragment extends Fragment {
                 editor = sharedPreferences.edit();
                 editor.putString("current_fridge", content);
                 editor.apply();
+
+                // build new connection
+                upload_portrait(content);
             }
         }
 
+        // get portrait
         if(requestCode == REQUEST_IMAGE){
             if(resultCode == RESULT_OK){
                 // get return file path list
