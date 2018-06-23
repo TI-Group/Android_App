@@ -13,6 +13,7 @@ import java.util.List;
 import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
 import io.appetizer.hci_fridge.View.RoundedRectProgressBar;
+import io.appetizer.hci_fridge.util.itemImageUtil;
 
 
 /**
@@ -45,7 +46,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
         holder.itemNum.setText(food.getNum()+"");
         int percent = 50;
         holder.itemTime.setProgress(percent);
-        holder.itemImage.setImageResource(R.drawable.ic_tab1_s);
+        holder.itemImage.setImageResource(itemImageUtil.getImage(food.getItemID()-1));
         //if (position % 2 == 0) {
         //    holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
         //} else {
