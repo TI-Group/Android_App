@@ -31,6 +31,8 @@ import com.yzq.zxinglibrary.android.Intents;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -173,19 +175,26 @@ public class MeFragment extends Fragment {
         startActivityForResult(intent, REQUEST_CODE_SCAN);
     }
 
-    // upload it to tencent youtu server
-    private void upload_portrait(File file){
-        Youtu faceYoutu = new Youtu(APP_ID, SECRET_ID, SECRET_KEY, Youtu.API_YOUTU_END_POINT,USER_ID);
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hci_fridge",MODE_PRIVATE);
-        String fridge_id = sharedPreferences.getString("current_fridge", "");
-        String user_id = sharedPreferences.getString("userid", "");
-        List<String> group = new ArrayList<>();
-        group.add(fridge_id);
-        try {
-            faceYoutu.NewPerson(file.getPath(), user_id, group);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    // build a connection between user's face and the fridge with id fridge_id
+    private void upload_portrait(final String fridge_id){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File fileDir = getContext().getFilesDir();
+                File myPortrait = new File(fileDir,"portrait");
+                Youtu faceYoutu = new Youtu(APP_ID, SECRET_ID, SECRET_KEY, Youtu.API_YOUTU_END_POINT,USER_ID);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hci_fridge",MODE_PRIVATE);
+                String user_id = sharedPreferences.getString("userid", "");
+                List<String> group = new ArrayList<>();
+                group.add(fridge_id);
+                try {
+                    JSONObject object = faceYoutu.NewPerson(myPortrait.getPath(), user_id, group);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "run: upload success");
+            }
+        }).start();
     }
 
 
@@ -211,6 +220,9 @@ public class MeFragment extends Fragment {
                 editor = sharedPreferences.edit();
                 editor.putString("current_fridge", content);
                 editor.apply();
+
+                // build new connection
+                upload_portrait(content);
             }
         }
 
@@ -245,8 +257,6 @@ public class MeFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                // upload portrait to tecent youtu
-                upload_portrait(myPortrait);
             }
         }
 
