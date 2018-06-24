@@ -279,7 +279,7 @@ public class MeFragment extends Fragment {
                             }
                         }).show();
                 sharedPreferenceUtil.set(getContext(),"hci_fridge","current_fridge",content);
-                final String userId = "2";
+                final String userId = sharedPreferenceUtil.get(getContext(),"hci_fridge","userId");
                 final String token = sharedPreferenceUtil.get(getContext(),"hci_fridge","token");
 
 
@@ -352,8 +352,6 @@ public class MeFragment extends Fragment {
 
             }
         }
-
-
     }
 
 
