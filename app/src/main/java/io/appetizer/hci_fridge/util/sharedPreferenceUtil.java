@@ -17,7 +17,14 @@ public class sharedPreferenceUtil {
         sharedPreferences = context.getSharedPreferences(spname,MODE_PRIVATE);
         editor = sharedPreferences.edit();
         String result = sharedPreferences.getString(fieldname, null);
-        editor.commit();
+        editor.apply();
         return result;
+    }
+
+    public static void set(Context context, String spname, String fieldname, String value){
+        sharedPreferences = context.getSharedPreferences(spname,MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.putString(fieldname,value);
+        editor.apply();
     }
 }

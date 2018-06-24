@@ -13,6 +13,8 @@ public class Urlpath {
     public static String changeItemUrl = ip+"/fridge/fridgeAction/changeItem";
     public static String deleteItemUrl = ip+"/fridge/fridgeAction/deleteItem";
     public static String addItemUrl = ip+"/fridge/fridgeAction/addItem";
+    public static String setRelationToFridgeUrl = ip+"/fridge/userAction/setRelationToFridge";
+    public static String getRelationToFridgeUrl = ip+"/fridge/userAction/getRelationToFridge";
 
 
 }

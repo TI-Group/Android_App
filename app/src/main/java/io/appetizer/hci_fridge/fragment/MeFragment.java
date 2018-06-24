@@ -2,12 +2,16 @@ package io.appetizer.hci_fridge.fragment;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.FileObserver;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -20,11 +24,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.youtu.Youtu;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.android.Intents;
@@ -46,7 +52,12 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.appetizer.hci_fridge.MainActivity;
+import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
+import io.appetizer.hci_fridge.View.Myfridges;
+import io.appetizer.hci_fridge.util.Urlpath;
+import io.appetizer.hci_fridge.util.okhttpManager;
+import io.appetizer.hci_fridge.util.sharedPreferenceUtil;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -64,12 +75,15 @@ public class MeFragment extends Fragment {
     public static final String USER_ID = "1823997989";
 
     private static final String TAG = "MeFragment";
+    private okhttpManager manager = new okhttpManager();
     // scan 2d code
-    private LinearLayout scan_code_button;
-    private LinearLayout upload_portrait_button;
+    private LinearLayout scan_code_button,personal_home_btn,upload_portrait_button;
     private CircleImageView portrait_view;
     private static final int REQUEST_CODE_SCAN = 1;
     private static final int REQUEST_IMAGE = 2;
+    private static final int RETURN_SETRELATION_ITEM_SUCCEED = 3;
+    private static final int RETURN_SETRELATION_ITEM_FAILED = 4;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -108,6 +122,16 @@ public class MeFragment extends Fragment {
         setPortrait_view();
         upload_portrait_button = getActivity().findViewById(R.id.upload_portrait_btn);
         scan_code_button = getActivity().findViewById(R.id.scan_code_btn);
+        personal_home_btn = getActivity().findViewById(R.id.personal_home_btn);
+
+        personal_home_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), Myfridges.class);
+                startActivity(intent);
+            }
+        });
+
 
         scan_code_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,6 +221,22 @@ public class MeFragment extends Fragment {
         }).start();
     }
 
+    private int setRelationToFridge(String fridgeId, String userId, String token){
+        String url = Urlpath.setRelationToFridgeUrl+"?userId="+userId+"&fridgeId="+fridgeId+"&token="+token;
+        String result = manager.sendStringByPost(url, "");
+        try {
+            JSONObject json = new JSONObject(result);
+            String success = json.getString("success");
+            if(success != "true"){
+                return -1;
+            }
+            else return 0;
+        }catch (org.json.JSONException e){
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -206,23 +246,56 @@ public class MeFragment extends Fragment {
         if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
             if (data != null) {
 
-                String content = data.getStringExtra(Constant.CODED_CONTENT);
-                // add scaned firdge into bind list
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("bind_fridge",MODE_PRIVATE);
-                int count = sharedPreferences.getAll().size();
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(count + "", content);
-                editor.apply();
-                Log.d(TAG, "onActivityResult: store fridge id:" +content+" success!");
+                final String content = data.getStringExtra(Constant.CODED_CONTENT);
+                final EditText editText = new EditText(getContext());
+                AlertDialog.Builder inputDialog =
+                        new AlertDialog.Builder(getContext());
+                inputDialog.setTitle("请输入冰箱的昵称").setView(editText);
+                inputDialog.setPositiveButton("确定",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sharedPreferenceUtil.set(getContext(),"bind_fridge",content,editText.toString());
+                            }
+                        }).show();
+                sharedPreferenceUtil.set(getContext(),"hci_fridge","current_fridge",content);
+                final String userId = "2";
+                final String token = sharedPreferenceUtil.get(getContext(),"hci_fridge","token");
 
-                // change current fridge
-                sharedPreferences = getActivity().getSharedPreferences("hci_fridge",MODE_PRIVATE);
-                editor = sharedPreferences.edit();
-                editor.putString("current_fridge", content);
-                editor.apply();
 
+                final Handler handler = new Handler() {
+                    public void handleMessage(Message msg) {
+                        switch (msg.what) {
+                            case RETURN_SETRELATION_ITEM_SUCCEED:
+                                upload_portrait(content);
+                                break;
+                            case RETURN_SETRELATION_ITEM_FAILED:
+                                Toast.makeText(getContext(), "setrelation failed", Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                break;
+                        }
+                        super.handleMessage(msg);
+                    }
+                };
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        int result = setRelationToFridge(content,userId,token);
+                        if(result==0){
+                            Message message = new Message();
+                            message.what = RETURN_SETRELATION_ITEM_SUCCEED;
+                            handler.sendMessage(message);
+                        }
+                        else {
+                            Message message = new Message();
+                            message.what = RETURN_SETRELATION_ITEM_FAILED;
+                            handler.sendMessage(message);
+                        }
+
+                    }}).start();
                 // build new connection
-                upload_portrait(content);
+
             }
         }
 

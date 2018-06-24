@@ -90,8 +90,6 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
             return -1;
         }
-
-
     }
 
 }

@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Android_App.iml" filepath="$PROJECT_DIR$/Android_App.iml" />
+      <module fileurl="file://E:\androidProj\hci_fridge\Android_App.iml" filepath="E:\androidProj\hci_fridge\Android_App.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hci_fridge.iml" filepath="$PROJECT_DIR$/hci_fridge.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>

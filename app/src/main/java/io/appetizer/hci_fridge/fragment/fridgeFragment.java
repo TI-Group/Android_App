@@ -33,6 +33,7 @@ import io.appetizer.hci_fridge.R;
 import io.appetizer.hci_fridge.adapter.FoodAdapter;
 import io.appetizer.hci_fridge.util.Urlpath;
 import io.appetizer.hci_fridge.util.okhttpManager;
+import io.appetizer.hci_fridge.util.sharedPreferenceUtil;
 
 
 /**
@@ -93,9 +94,9 @@ public class fridgeFragment extends Fragment {
         g_inflater = inflater;
         g_container = container;
         g_savedInstanceState = savedInstanceState;
-        final String userId = "2";
-        final String token = "a";
-        final String fridgeId = "1";
+        final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userId");
+        final String token = sharedPreferenceUtil.get(context,"hci_fridge","token");
+        final String fridgeId = sharedPreferenceUtil.get(context,"hci_fridge","current_fridge");
         /*
         * Url相关的要跑在线程里面，不然跑不出来
         */
@@ -352,7 +353,6 @@ public class fridgeFragment extends Fragment {
             e.printStackTrace();
             return -1;
         }
-
     }
 
     @Override
