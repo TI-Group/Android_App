@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.support.annotation.NonNull;
@@ -25,12 +27,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.youtu.Youtu;
 import com.yzq.zxinglibrary.android.CaptureActivity;
-import com.yzq.zxinglibrary.android.Intents;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -47,6 +48,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.appetizer.hci_fridge.MainActivity;
 import io.appetizer.hci_fridge.R;
+import io.appetizer.hci_fridge.util.Youtu;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -182,20 +184,38 @@ public class MeFragment extends Fragment {
             public void run() {
                 File fileDir = getContext().getFilesDir();
                 File myPortrait = new File(fileDir,"portrait");
-                Youtu faceYoutu = new Youtu(APP_ID, SECRET_ID, SECRET_KEY, Youtu.API_YOUTU_END_POINT,USER_ID);
+                long size = myPortrait.length() / 1024;  // kB
+                Youtu faceYoutu = new Youtu(APP_ID, SECRET_ID, SECRET_KEY, Youtu.API_YOUTU_END_POINT);
+
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hci_fridge",MODE_PRIVATE);
                 String user_id = sharedPreferences.getString("userid", "");
-                List<String> group = new ArrayList<>();
-                group.add(fridge_id);
                 try {
-                    JSONObject object = faceYoutu.NewPerson(myPortrait.getPath(), user_id, group);
-                }catch (Exception e){
+                    // get origin group list and delete origin person, then create new person with new group list
+                    JSONObject object = faceYoutu.GetInfo(user_id);
+                    JSONArray array = (JSONArray)object.get("group_ids");
+                    List<String> groups = new ArrayList<>();
+                    for(int i = 0; i < array.length(); i++){
+                        String g = (String)array.get(i);
+                        groups.add(g);
+                    }
+                    groups.add(fridge_id);
+                    faceYoutu.DelPerson(user_id);
+                    Bitmap selectedImage = BitmapFactory.decodeFile(myPortrait.getPath());
+                    JSONObject response = faceYoutu.NewPerson(selectedImage, user_id, groups);
+                    Log.d(TAG, response.toString());
+                    if(null != selectedImage) {
+                        selectedImage.recycle();
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Log.d(TAG, "run: upload success");
             }
         }).start();
     }
+
+    // used to get the image file's path
+
 
 
     @Override
