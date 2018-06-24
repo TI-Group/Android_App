@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
+import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.Model.Fridgeinfo;
 import io.appetizer.hci_fridge.R;
 import io.appetizer.hci_fridge.View.RoundedRectProgressBar;
@@ -114,13 +115,18 @@ public class NickAdapter extends RecyclerView.Adapter<NickAdapter.MyViewHolder> 
         public void onItemLongClick(View view, int position);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView fridgeName;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             fridgeName = (TextView) itemView.findViewById(R.id.fridgeName);
+        }
+
+        public Fridgeinfo getData(){
+            int pos = this.getAdapterPosition();
+            return data.get(pos);
         }
     }
 

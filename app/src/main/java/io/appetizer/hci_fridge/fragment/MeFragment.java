@@ -275,11 +275,12 @@ public class MeFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                sharedPreferenceUtil.set(getContext(),"bind_fridge",content,editText.toString());
+                                sharedPreferenceUtil.set(getContext(),"bind_fridge",content,editText.getText().toString());
+                                //sharedPreferenceUtil.set(getContext(),"bind_fridge",fridge.getFridegId(),editText.getText().toString());
+                                System.out.println("QQQQQQQQQQQQQQQQQQQQ"+editText.toString()+content);
                             }
                         }).show();
-                sharedPreferenceUtil.set(getContext(),"hci_fridge","current_fridge",content);
-                final String userId = sharedPreferenceUtil.get(getContext(),"hci_fridge","userId");
+                final String userId = sharedPreferenceUtil.get(getContext(),"hci_fridge","userid");
                 final String token = sharedPreferenceUtil.get(getContext(),"hci_fridge","token");
 
 

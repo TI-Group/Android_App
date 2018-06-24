@@ -32,6 +32,7 @@ import io.appetizer.hci_fridge.Model.Fridgeinfo;
 import io.appetizer.hci_fridge.R;
 import io.appetizer.hci_fridge.adapter.FoodAdapter;
 import io.appetizer.hci_fridge.adapter.NickAdapter;
+import io.appetizer.hci_fridge.util.OnRecyclerItemClickListener;
 import io.appetizer.hci_fridge.util.Urlpath;
 import io.appetizer.hci_fridge.util.okhttpManager;
 import io.appetizer.hci_fridge.util.sharedPreferenceUtil;
@@ -69,7 +70,7 @@ public class Myfridges extends AppCompatActivity {
             }
         });
 
-        final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userId");
+        final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userid");
         final String token = sharedPreferenceUtil.get(context,"hci_fridge","token");
 
         final Handler handler = new Handler() {
@@ -79,12 +80,36 @@ public class Myfridges extends AppCompatActivity {
                         mContentRv = (RecyclerView) findViewById(R.id.rv_content);
                         mContentRv.setLayoutManager(new LinearLayoutManager(context));
                         adapter = new NickAdapter(context,fridgeList);
-                        adapter.setOnItemClickListener(new NickAdapter.OnItemClickListener() {
+                        mContentRv.addOnItemTouchListener(new OnRecyclerItemClickListener(mContentRv) {
                             @Override
-                            public void onItemClick(View view, final int position) {
-                                sharedPreferenceUtil.set(context,"hci_fridge","current_fridge",fridgeList.get(position).getFridegId());
+                            public void onItemClick(RecyclerView.ViewHolder vh) {
+                                Fridgeinfo fridge = ((NickAdapter.MyViewHolder)vh).getData();
+                                sharedPreferenceUtil.set(context,"hci_fridge","current_fridge",fridge.getFridegId());
                                 Intent intent = new Intent(context, MainActivity.class);
                                 startActivity(intent);
+                            }
+                            @Override
+                            public void onItemLongClick(RecyclerView.ViewHolder vh) {
+                                final Fridgeinfo fridge = ((NickAdapter.MyViewHolder)vh).getData();
+                                final EditText editText = new EditText(context);
+                                AlertDialog.Builder inputDialog =
+                                        new AlertDialog.Builder(context);
+                                inputDialog.setTitle("请输入修改后的昵称").setView(editText);
+                                inputDialog.setPositiveButton("确定",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                sharedPreferenceUtil.set(context,"bind_fridge",fridge.getFridegId(),editText.getText().toString());
+                                                fridge.setNickName(editText.getText().toString());
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                        }).show();
+                            }
+                        });
+                        /*adapter.setOnItemClickListener(new NickAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, final int position) {
+
                             }
 
                             @Override
@@ -104,7 +129,7 @@ public class Myfridges extends AppCompatActivity {
                                         }).show();
 
                             }
-                        });
+                        });*/
                         mContentRv.setAdapter(adapter);
                         break;
                     case RETURN_GET_FRIDGE_FAILED:
@@ -151,6 +176,7 @@ public class Myfridges extends AppCompatActivity {
                 for(int i=0;i<array.length();i++){
                     JSONObject tmp = array.getJSONObject(i);
                     Fridgeinfo fridge = new Fridgeinfo(tmp.getString("fridgeId"), sharedPreferenceUtil.get(getApplicationContext(),"bind_fridge",tmp.getString("fridgeId")));
+                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+fridge.getNickName());
                     fridgeList.add(fridge);
                 }
                 return 0;

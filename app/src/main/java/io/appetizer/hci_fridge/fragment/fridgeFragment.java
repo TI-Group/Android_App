@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,6 +60,8 @@ public class fridgeFragment extends Fragment {
     private final static int RETURN_DELETE_ITEM_FAILED= 3;
     private final static int RETURN_ADD_ITEM_SUCCEED= 4;
     private final static int RETURN_ADD_ITEM_FAILED= 5;
+    private final static int RETURN_GET_ITEM_SUCCEED= 6;
+    private final static int RETURN_GET_ITEM_FAILED= 7;
 
 
     private Handler requestHandler = new Handler() {
@@ -74,11 +77,17 @@ public class fridgeFragment extends Fragment {
                     Toast.makeText(context, "changeItem failed", Toast.LENGTH_SHORT).show();
                     break;
                 case RETURN_ADD_ITEM_SUCCEED:
-                    foodList.clear();
                     onCreateView(g_inflater, g_container, g_savedInstanceState);
                     break;
                 case RETURN_ADD_ITEM_FAILED:
                     Toast.makeText(context, "addItem failed", Toast.LENGTH_SHORT).show();
+                    break;
+                case RETURN_GET_ITEM_SUCCEED:
+                    adapter.setList(foodList);
+                    adapter.notifyDataSetChanged();
+                    break;
+                case RETURN_GET_ITEM_FAILED:
+                    Toast.makeText(context, "getItemsItem failed", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -94,7 +103,7 @@ public class fridgeFragment extends Fragment {
         g_inflater = inflater;
         g_container = container;
         g_savedInstanceState = savedInstanceState;
-        final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userId");
+        final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userid");
         final String token = sharedPreferenceUtil.get(context,"hci_fridge","token");
         final String fridgeId = sharedPreferenceUtil.get(context,"hci_fridge","current_fridge");
         /*
@@ -119,54 +128,6 @@ public class fridgeFragment extends Fragment {
         adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
-
-                /*View promptsView = inflater.inflate(R.layout.dialog,null);
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                // set prompts.xml to alertdialog builder
-                alertDialogBuilder.setView(promptsView);
-                final EditText userInput = (EditText) promptsView.findViewById(R.id.editTextResult);
-                // set dialog message
-                alertDialogBuilder
-                        .setCancelable(false)
-                        .setPositiveButton("OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        final int newnum = Integer.parseInt(userInput.getText().toString());
-                                        final Foodinfo food = foodList.get(position);
-                                        new Thread(new Runnable(){
-                                            @Override
-                                            public void run() {
-                                                int result = changeItem(food.getItemID(),newnum,userId, token, fridgeId);
-                                                if(result==0){
-                                                    Message message = new Message();
-                                                    message.what = RETURN_CHANGE_ITEM_SUCCEED;
-                                                    message.arg1 = position;
-                                                    message.arg2 = (int)newnum;
-                                                    requestHandler.sendMessage(message);
-                                                }
-                                                else {
-                                                    Message message = new Message();
-                                                    message.what = RETURN_CHANGE_ITEM_FAILED;
-                                                    message.arg1 = position;
-                                                    message.arg2 = newnum;
-                                                    requestHandler.sendMessage(message);
-                                                }
-
-                                            }}).start();
-                                    }
-                                })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-
-                // show it
-                alertDialog.show();*/
                 final EditText editText = new EditText(context);
                 AlertDialog.Builder inputDialog =
                         new AlertDialog.Builder(context);
@@ -218,14 +179,6 @@ public class fridgeFragment extends Fragment {
                                         .setCancelClickListener(null)
                                         .setConfirmClickListener(null)
                                         .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-
-                                // or you can new a SweetAlertDialog to show
-                               /* sDialog.dismiss();
-                                new SweetAlertDialog(SampleActivity.this, SweetAlertDialog.ERROR_TYPE)
-                                        .setTitleText("Cancelled!")
-                                        .setContentText("Your imaginary file is safe :)")
-                                        .setConfirmText("OK")
-                                        .show();*/
                             }
                         })
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -285,6 +238,7 @@ public class fridgeFragment extends Fragment {
     private void getItems(String userId, String token, String fridgeId){
         String url = Urlpath.getItemsUrl+"?userId="+userId+"&token="+token+"&fridgeId="+fridgeId;
         String result = manager.sendStringByPost(url, "");
+        foodList.clear();
         try {
             JSONObject json = new JSONObject(result);
             String success = json.getString("success");
@@ -345,6 +299,7 @@ public class fridgeFragment extends Fragment {
         try {
             JSONObject json = new JSONObject(result);
             String success = json.getString("success");
+            Log.e("addItem",success);
             if(success != "true"){
                 return -1;
             }

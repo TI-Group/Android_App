@@ -33,6 +33,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
         this.data = data;
     }
 
+    public void setList(List<Foodinfo> datas){
+        data.clear();
+        data.addAll(datas);
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MyViewHolder holder = new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.fridge_item, parent, false));
