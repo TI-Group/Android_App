@@ -41,7 +41,7 @@ import io.appetizer.hci_fridge.util.sharedPreferenceUtil;
  * A simple {@link Fragment} subclass.
  */
 public class fridgeFragment extends Fragment {
-    private RecyclerView fruit,vegetable;
+    private RecyclerView fruit;
     private FoodAdapter adapter;
     private View view;
     private Context context;
@@ -105,7 +105,7 @@ public class fridgeFragment extends Fragment {
         g_savedInstanceState = savedInstanceState;
         final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userid");
         final String token = sharedPreferenceUtil.get(context,"hci_fridge","token");
-        final String fridgeId = sharedPreferenceUtil.get(context,"hci_fridge","current_fridge");
+        final String fridgeId = "1";
         /*
         * Url相关的要跑在线程里面，不然跑不出来
         */
@@ -119,7 +119,7 @@ public class fridgeFragment extends Fragment {
 
 
         fruit = (RecyclerView) view.findViewById(R.id.fruit);
-        vegetable = (RecyclerView) view.findViewById(R.id.vegetable);
+        //vegetable = (RecyclerView) view.findViewById(R.id.vegetable);
 
 
         adapter = new FoodAdapter(this.getContext(), foodList);
@@ -230,8 +230,8 @@ public class fridgeFragment extends Fragment {
             }
         });
         fruit.setAdapter(adapter);
-        vegetable.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        vegetable.setAdapter(adapter);
+        //vegetable.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        //vegetable.setAdapter(adapter);
         return view;
     }
 
