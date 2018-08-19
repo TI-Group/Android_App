@@ -34,22 +34,17 @@ import com.yzq.zxinglibrary.common.Constant;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
-import io.appetizer.hci_fridge.View.ScanActivity;
 import io.appetizer.hci_fridge.View.WebviewActivity;
+import io.appetizer.hci_fridge.adapter.DailyAdapter;
 import io.appetizer.hci_fridge.adapter.FoodAdapter;
-import io.appetizer.hci_fridge.register.SetPasswordActivity;
 import io.appetizer.hci_fridge.util.Urlpath;
 import io.appetizer.hci_fridge.util.okhttpManager;
 import io.appetizer.hci_fridge.util.sharedPreferenceUtil;
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 import static android.app.Activity.RESULT_OK;
 

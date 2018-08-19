@@ -7,18 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,10 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.appetizer.hci_fridge.MainActivity;
-import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.Model.Fridgeinfo;
 import io.appetizer.hci_fridge.R;
-import io.appetizer.hci_fridge.adapter.FoodAdapter;
 import io.appetizer.hci_fridge.adapter.NickAdapter;
 import io.appetizer.hci_fridge.util.OnRecyclerItemClickListener;
 import io.appetizer.hci_fridge.util.Urlpath;

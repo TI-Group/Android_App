@@ -10,6 +10,7 @@ public class Urlpath {
     public static String registerUrl = ip+"/fridge/userAction/userSignup";
     public static String loginUrl = ip+"/fridge/userAction/userLogin";
     public static String getItemsUrl = ip+"/fridge/fridgeAction/getItems";
+    public static String getDailyItemsUrl = ip+"/fridge/userAction/getEatingRecords";
     public static String changeItemUrl = ip+"/fridge/fridgeAction/changeItem";
     public static String deleteItemUrl = ip+"/fridge/fridgeAction/deleteItem";
     public static String addItemUrl = ip+"/fridge/fridgeAction/addItem";
