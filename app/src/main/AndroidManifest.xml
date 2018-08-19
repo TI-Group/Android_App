@@ -48,6 +48,12 @@
         <activity
             android:name=".View.Myfridges"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".View.ScanActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".View.WebviewActivity"
+            android:screenOrientation="portrait" />
         <!-- Image Selector Entry -->
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"

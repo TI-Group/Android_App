@@ -42,7 +42,10 @@ import java.util.List;
 
 import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
+import io.appetizer.hci_fridge.View.ScanActivity;
+import io.appetizer.hci_fridge.View.WebviewActivity;
 import io.appetizer.hci_fridge.adapter.FoodAdapter;
+import io.appetizer.hci_fridge.register.SetPasswordActivity;
 import io.appetizer.hci_fridge.util.Urlpath;
 import io.appetizer.hci_fridge.util.okhttpManager;
 import io.appetizer.hci_fridge.util.sharedPreferenceUtil;
@@ -423,7 +426,8 @@ public class fridgeFragment extends Fragment {
 
                         break;
                     case R.id.scan_action:
-                        scan_code();
+                        Intent intent = new Intent(getActivity(), WebviewActivity.class);
+                        startActivityForResult(intent, 0);
                         break;
                     default:
                         break;

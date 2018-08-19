@@ -13,6 +13,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "io.appetizer.hci_fridge"
+        multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
@@ -48,6 +49,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.1'
     implementation 'com.github.yuzhiqiang1993:zxing:2.1.8'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
+    compile ('me.dm7.barcodescanner:zxing:1.9.8') {
+        exclude group: 'com.google.zxing'
+    }
     implementation project(':library')
     //glide
     implementation 'com.github.bumptech.glide:glide:3.7.0'
