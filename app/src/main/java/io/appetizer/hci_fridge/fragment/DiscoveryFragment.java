@@ -71,7 +71,7 @@ public class DiscoveryFragment extends Fragment {
         context = this.getContext();
         final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userid");
         final String token = sharedPreferenceUtil.get(context,"hci_fridge","token");
-        final String fridgeId = "1";
+        final String fridgeId = sharedPreferenceUtil.get(context,"hci_fridge","current_fridge");
         /*
         * Url相关的要跑在线程里面，不然跑不出来
         */

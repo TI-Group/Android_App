@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.yzq.zxinglibrary.android.CaptureActivity;
@@ -119,7 +120,7 @@ public class fridgeFragment extends Fragment {
         g_savedInstanceState = savedInstanceState;
         final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userid");
         final String token = sharedPreferenceUtil.get(context,"hci_fridge","token");
-        final String fridgeId = "1";
+        final String fridgeId = sharedPreferenceUtil.get(context,"hci_fridge","current_fridge");
         /*
         * Url相关的要跑在线程里面，不然跑不出来
         */
@@ -378,10 +379,12 @@ public class fridgeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        android.support.v7.widget.Toolbar toolbar = getActivity().findViewById(R.id.fridgeToolBar);
+        setHasOptionsMenu(true);
+        Toolbar toolbar = getActivity().findViewById(R.id.fridgeToolBar);
         toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.white));
-        final String fridgeId = "1";
+        final String fridgeId = sharedPreferenceUtil.get(context,"hci_fridge","current_fridge");
         toolbar.setTitle("食物");
+        System.out.println("ToolBarRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
         //导入fragment的menu文件
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.frag_fridge);
@@ -431,7 +434,23 @@ public class fridgeFragment extends Fragment {
             }
         });
 
+
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
 
 
 

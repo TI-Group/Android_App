@@ -32,6 +32,13 @@ public class MainActivity extends AppCompatActivity{
         initView();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initView();
+    }
+
+
     private void initView() {
         /**
          * RadioGroup部分

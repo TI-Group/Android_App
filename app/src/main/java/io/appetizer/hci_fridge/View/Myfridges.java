@@ -79,6 +79,7 @@ public class Myfridges extends AppCompatActivity {
                                 Fridgeinfo fridge = ((NickAdapter.MyViewHolder)vh).getData();
                                 sharedPreferenceUtil.set(context,"hci_fridge","current_fridge",fridge.getFridegId());
                                 Intent intent = new Intent(context, MainActivity.class);
+                                intent.putExtra("id",1);
                                 startActivity(intent);
                             }
                             @Override
