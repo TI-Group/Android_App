@@ -11,5 +11,11 @@
         android:title="addAction"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/scan_action"
+        android:icon="@drawable/two_div_code"
+        android:title="scanAction"
+        app:showAsAction="always"/>
+
 </menu>
 
