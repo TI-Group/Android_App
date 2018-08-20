@@ -384,7 +384,6 @@ public class fridgeFragment extends Fragment {
         toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.white));
         final String fridgeId = sharedPreferenceUtil.get(context,"hci_fridge","current_fridge");
         toolbar.setTitle("食物");
-        System.out.println("ToolBarRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
         //导入fragment的menu文件
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.frag_fridge);
