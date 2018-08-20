@@ -44,7 +44,7 @@
 
 
 
-            <!--<TextView
+            <TextView
                 android:paddingTop="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,11 +54,11 @@
                 android:textSize="18sp" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/vegetable"
+                android:id="@+id/barcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="5dp">
-            </android.support.v7.widget.RecyclerView>-->
+            </android.support.v7.widget.RecyclerView>
         </LinearLayout>
 
     </ScrollView>

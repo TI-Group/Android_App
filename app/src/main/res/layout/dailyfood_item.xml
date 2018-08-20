@@ -5,7 +5,8 @@
     android:layout_height="wrap_content">
 
 
-    <ImageView android:id="@+id/icon"
+
+    <ImageView android:id="@+id/icon2"
         android:layout_width="190px"
         android:layout_height="190px"
         android:layout_margin="5px"/>
@@ -31,7 +32,7 @@
             android:layout_margin="5px"
             android:textStyle="bold"
             android:textSize="50px"/>
-        <TextView android:id="@+id/time"
+        <TextView android:id="@+id/time2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5px"

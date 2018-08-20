@@ -35,12 +35,15 @@ import com.yzq.zxinglibrary.common.Constant;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.appetizer.hci_fridge.Model.Barcodeinfo;
 import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
 import io.appetizer.hci_fridge.View.WebviewActivity;
+import io.appetizer.hci_fridge.adapter.BarcodeAdapter;
 import io.appetizer.hci_fridge.adapter.DailyAdapter;
 import io.appetizer.hci_fridge.adapter.FoodAdapter;
 import io.appetizer.hci_fridge.util.Urlpath;
@@ -55,10 +58,13 @@ import static android.app.Activity.RESULT_OK;
  */
 public class fridgeFragment extends Fragment {
     private RecyclerView fruit;
+    private RecyclerView barcodeView;
     private FoodAdapter adapter;
+    private BarcodeAdapter barcodeAdapter;
     private View view;
     private Context context;
     private List<Foodinfo> foodList = new ArrayList<Foodinfo>();
+    private List<Barcodeinfo> barcodeList = new ArrayList<Barcodeinfo>();
     private okhttpManager manager = new okhttpManager();
     private LayoutInflater g_inflater;
     private ViewGroup g_container;
@@ -100,6 +106,9 @@ public class fridgeFragment extends Fragment {
                 case RETURN_GET_ITEM_SUCCEED:
                     adapter.setList(foodList);
                     adapter.notifyDataSetChanged();
+                    barcodeAdapter.setList(barcodeList);
+                    barcodeAdapter.notifyDataSetChanged();
+                    System.out.println("aaacccccccccccccccccccccccccccccc "+barcodeList.size()+foodList.size());
                     break;
                 case RETURN_GET_ITEM_FAILED:
                     Toast.makeText(context, "getItemsItem failed", Toast.LENGTH_SHORT).show();
@@ -114,164 +123,69 @@ public class fridgeFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view= inflater.inflate(R.layout.frag_fridge, container, false);
-        context = this.getContext();
-        g_inflater = inflater;
-        g_container = container;
-        g_savedInstanceState = savedInstanceState;
-        final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userid");
-        final String token = sharedPreferenceUtil.get(context,"hci_fridge","token");
-        final String fridgeId = sharedPreferenceUtil.get(context,"hci_fridge","current_fridge");
-        /*
-        * Url相关的要跑在线程里面，不然跑不出来
-        */
-
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-                getItems(userId,token,fridgeId);
-            }}).start();
-
-
-
-        fruit = (RecyclerView) view.findViewById(R.id.fruit);
-        //vegetable = (RecyclerView) view.findViewById(R.id.vegetable);
-
-
-        adapter = new FoodAdapter(this.getContext(), foodList);
-
-        fruit.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, final int position) {
-                final EditText editText = new EditText(context);
-                AlertDialog.Builder inputDialog =
-                        new AlertDialog.Builder(context);
-                inputDialog.setTitle("请输入修改后的数量").setView(editText);
-                inputDialog.setPositiveButton("确定",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final int newnum = Integer.parseInt(editText.getText().toString());
-                                final Foodinfo food = foodList.get(position);
-                                new Thread(new Runnable(){
-                                    @Override
-                                    public void run() {
-                                        int result = changeItem(food.getItemID(),newnum,userId, token, fridgeId);
-                                        if(result==0){
-                                            Message message = new Message();
-                                            message.what = RETURN_CHANGE_ITEM_SUCCEED;
-                                            message.arg1 = position;
-                                            message.arg2 = (int)newnum;
-                                            requestHandler.sendMessage(message);
-                                        }
-                                        else {
-                                            Message message = new Message();
-                                            message.what = RETURN_CHANGE_ITEM_FAILED;
-                                            requestHandler.sendMessage(message);
-                                        }
-
-                                    }}).start();
-                            }
-                        }).show();
-            }
-
-            @Override
-            public void onItemLongClick(View view, final int position) {
-                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Are you sure?")
-                        .setContentText("Won't be able to recover this file!")
-                        .setCancelText("No,cancel plx!")
-                        .setConfirmText("Yes,delete it!")
-                        .showCancelButton(true)
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                // reuse previous dialog instance, keep widget user state, reset them if you need
-                                sDialog.setTitleText("Cancelled!")
-                                        .setContentText("Your imaginary file is safe :)")
-                                        .setConfirmText("OK")
-                                        .showCancelButton(false)
-                                        .setCancelClickListener(null)
-                                        .setConfirmClickListener(null)
-                                        .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            }
-                        })
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(final SweetAlertDialog sDialog) {
-                                final Handler deleteHandler = new Handler() {
-                                    public void handleMessage(Message msg) {
-                                        switch (msg.what) {
-                                            case RETURN_DELETE_ITEM_SUCCEED:
-                                                sDialog.setTitleText("Deleted!")
-                                                        .setContentText("Your imaginary file has been deleted!")
-                                                        .setConfirmText("OK")
-                                                        .showCancelButton(false)
-                                                        .setCancelClickListener(null)
-                                                        .setConfirmClickListener(null)
-                                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                                adapter.remove(position);
-                                                break;
-                                            case RETURN_DELETE_ITEM_FAILED:
-                                                Toast.makeText(context, "deleteItem failed", Toast.LENGTH_SHORT).show();
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                        super.handleMessage(msg);
-                                    }
-                                };
-                                new Thread(new Runnable(){
-                                    @Override
-                                    public void run() {
-                                        int result = deleteItem(fridgeId,foodList.get(position).getName());;
-                                        if(result==0){
-                                            Message message = new Message();
-                                            message.what = RETURN_DELETE_ITEM_SUCCEED;
-                                            message.arg1 = position;
-                                            deleteHandler.sendMessage(message);
-                                        }
-                                        else {
-                                            Message message = new Message();
-                                            message.what = RETURN_DELETE_ITEM_FAILED;
-                                            deleteHandler.sendMessage(message);
-                                        }
-
-                                    }}).start();
-                            }
-                        })
-                        .show();
-
-            }
-        });
-        fruit.setAdapter(adapter);
-        //vegetable.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        //vegetable.setAdapter(adapter);
         return view;
     }
 
-    private void getItems(String userId, String token, String fridgeId){
+    private int getItems(String userId, String token, String fridgeId){
         String url = Urlpath.getItemsUrl+"?userId="+userId+"&token="+token+"&fridgeId="+fridgeId;
         String result = manager.sendStringByPost(url, "");
         foodList.clear();
+        barcodeList.clear();
         try {
             JSONObject json = new JSONObject(result);
             String success = json.getString("success");
             if(success != "true"){
                 Toast.makeText(context, "getItems failed", Toast.LENGTH_SHORT).show();
+                return -1;
             }
             else {
                 String list = json.getString("result");
                 JSONArray array = new JSONArray(list);
+                java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 for(int i=0;i<array.length();i++){
                     JSONObject tmp = array.getJSONObject(i);
-                    Foodinfo food = new Foodinfo(tmp.getString("itemName"),Integer.parseInt(tmp.getString("amount")),Integer.parseInt(tmp.getString("itemId")),tmp.getString("remainTime"));
-                    foodList.add(food);
+                    if(tmp.getString("barcode").equals("none")){
+                        String rowdate = tmp.getString("putInTime");
+                        rowdate = rowdate.replace("T"," ");
+                        java.util.Date date = format.parse(rowdate);
+                        Foodinfo food = new Foodinfo(tmp.getString("itemName"),Integer.parseInt(tmp.getString("amount")),
+                                Integer.parseInt(tmp.getString("itemId")),tmp.getString("remainTime"), date, Integer.parseInt(tmp.getString("shelflife")));
+                        foodList.add(food);
+                    }
+                    else{
+                        String rowdate = tmp.getString("putInTime");
+                        rowdate = rowdate.replace("T"," ");
+                        java.util.Date date = format.parse(rowdate);
+                        String barcode = tmp.getString("barcode");
+                        String name = "a";
+                        String imageUrl = "https://s.boohee.cn/house/upload_food/2018/2/10/mid_photo_url_66C79A4A8721.jpg";
+                        try {
+                            String barcodeurl = "https://food.boohee.com/fb/v1/foods/barcode?barcode=" + barcode + "&token=TDyqwbBFnckSpNrpmSegsBiqgL2quWmh&user_key=1573542a-8ec9-4096-978c-a8e82f0206f5&app_version=6.3.1&app_device=Android&os_version=6.0.1&phone_model=Nexus+5&channel=tencent";
+                            String barresult = manager.sendStringByGet(barcodeurl);
+                            JSONObject barjson = new JSONObject(barresult);
+                            String info = barjson.getString("foods");
+                            JSONArray bararray = new JSONArray(info);
+                            for (int j = 0; j < bararray.length(); j++) {
+                                JSONObject bartmp = bararray.getJSONObject(j);
+                                name = bartmp.getString("name");
+                                imageUrl = bartmp.getString("thumb_image_url");
+                            }
+                        } catch (org.json.JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Barcodeinfo barcodeinfo = new Barcodeinfo(barcode,date, Integer.parseInt(tmp.getString("amount")),name, imageUrl);
+                        barcodeList.add(barcodeinfo);
+                    }
                 }
-
+                System.out.println("aaaaaaaaaaaaaaaaaaaaaa "+barcodeList.size()+foodList.size());
+                return 0;
             }
         }catch (org.json.JSONException e){
             e.printStackTrace();
+            return -1;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
         }
 
     }
@@ -382,6 +296,9 @@ public class fridgeFragment extends Fragment {
         setHasOptionsMenu(true);
         Toolbar toolbar = getActivity().findViewById(R.id.fridgeToolBar);
         toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.white));
+        context = this.getContext();
+        final String userId = sharedPreferenceUtil.get(context,"hci_fridge","userid");
+        final String token = sharedPreferenceUtil.get(context,"hci_fridge","token");
         final String fridgeId = sharedPreferenceUtil.get(context,"hci_fridge","current_fridge");
         toolbar.setTitle("食物");
         //导入fragment的menu文件
@@ -395,6 +312,7 @@ public class fridgeFragment extends Fragment {
                         final EditText itemNum = new EditText(context);
                         AlertDialog.Builder inputDialog =
                                 new AlertDialog.Builder(context);
+                        inputDialog.setIcon(R.drawable.hci_fridge);
                         inputDialog.setTitle("请输入被添加的食物").setView(itemName);
                         inputDialog.setPositiveButton("确定",
                                 new DialogInterface.OnClickListener() {
@@ -433,11 +351,146 @@ public class fridgeFragment extends Fragment {
             }
         });
 
+        /*
+        * Url相关的要跑在线程里面，不然跑不出来
+        */
+
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                int result = getItems(userId,token,fridgeId);
+                System.out.println("aaabbbbbbbbbbbbbbbbbbbbbbbbb "+barcodeList.size()+foodList.size());
+                Message message = new Message();
+                message.what = RETURN_GET_ITEM_SUCCEED;
+                requestHandler.sendMessage(message);
+            }}).start();
+
+
+
+        fruit = (RecyclerView) view.findViewById(R.id.fruit);
+        barcodeView = (RecyclerView) view.findViewById(R.id.barcode);
+        //vegetable = (RecyclerView) view.findViewById(R.id.vegetable);
+
+
+        adapter = new FoodAdapter(this.getContext(), foodList);
+        barcodeAdapter = new BarcodeAdapter(this.getContext(), barcodeList);
+
+        fruit.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        barcodeView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        adapter.setOnItemClickListener(new FoodAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, final int position) {
+                final EditText editText = new EditText(context);
+                AlertDialog.Builder inputDialog =
+                        new AlertDialog.Builder(context);
+                inputDialog.setIcon(R.drawable.hci_fridge);
+                inputDialog.setTitle("请输入修改后的数量").setView(editText);
+                inputDialog.setPositiveButton("确定",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final int newnum = Integer.parseInt(editText.getText().toString());
+                                final Foodinfo food = foodList.get(position);
+                                new Thread(new Runnable(){
+                                    @Override
+                                    public void run() {
+                                        int result = changeItem(food.getItemID(),newnum,userId, token, fridgeId);
+                                        if(result==0){
+                                            Message message = new Message();
+                                            message.what = RETURN_CHANGE_ITEM_SUCCEED;
+                                            message.arg1 = position;
+                                            message.arg2 = (int)newnum;
+                                            requestHandler.sendMessage(message);
+                                        }
+                                        else {
+                                            Message message = new Message();
+                                            message.what = RETURN_CHANGE_ITEM_FAILED;
+                                            requestHandler.sendMessage(message);
+                                        }
+
+                                    }}).start();
+                            }
+                        }).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, final int position) {
+                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("确定删除？")
+                        .setContentText("删除后不可恢复！")
+                        .setCancelText("取消!")
+                        .setConfirmText("确定")
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                // reuse previous dialog instance, keep widget user state, reset them if you need
+                                sDialog.setTitleText("已取消")
+                                        .setContentText("物品删除已取消")
+                                        .setConfirmText("好的")
+                                        .showCancelButton(false)
+                                        .setCancelClickListener(null)
+                                        .setConfirmClickListener(null)
+                                        .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(final SweetAlertDialog sDialog) {
+                                final Handler deleteHandler = new Handler() {
+                                    public void handleMessage(Message msg) {
+                                        switch (msg.what) {
+                                            case RETURN_DELETE_ITEM_SUCCEED:
+                                                sDialog.setTitleText("删除")
+                                                        .setContentText("物品已删除")
+                                                        .setConfirmText("好的")
+                                                        .showCancelButton(false)
+                                                        .setCancelClickListener(null)
+                                                        .setConfirmClickListener(null)
+                                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                                adapter.remove(position);
+                                                break;
+                                            case RETURN_DELETE_ITEM_FAILED:
+                                                Toast.makeText(context, "deleteItem failed", Toast.LENGTH_SHORT).show();
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        super.handleMessage(msg);
+                                    }
+                                };
+                                new Thread(new Runnable(){
+                                    @Override
+                                    public void run() {
+                                        int result = deleteItem(fridgeId,foodList.get(position).getName());;
+                                        if(result==0){
+                                            Message message = new Message();
+                                            message.what = RETURN_DELETE_ITEM_SUCCEED;
+                                            message.arg1 = position;
+                                            deleteHandler.sendMessage(message);
+                                        }
+                                        else {
+                                            Message message = new Message();
+                                            message.what = RETURN_DELETE_ITEM_FAILED;
+                                            deleteHandler.sendMessage(message);
+                                        }
+
+                                    }}).start();
+                            }
+                        })
+                        .show();
+
+            }
+        });
+        fruit.setAdapter(adapter);
+        barcodeView.setAdapter(barcodeAdapter);
+
 
     }
     @Override
     public void onResume() {
         super.onResume();
+        System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
     }
 
     @Override

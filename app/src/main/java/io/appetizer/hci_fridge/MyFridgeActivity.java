@@ -14,8 +14,5 @@ public class MyFridgeActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         toolbar.setTitle("我的冰箱");
         setSupportActionBar(toolbar);
-
-
-
     }
 }

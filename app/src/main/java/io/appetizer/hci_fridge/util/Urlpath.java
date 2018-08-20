@@ -16,6 +16,7 @@ public class Urlpath {
     public static String addItemUrl = ip+"/fridge/fridgeAction/addItem";
     public static String setRelationToFridgeUrl = ip+"/fridge/userAction/setRelationToFridge";
     public static String getRelationToFridgeUrl = ip+"/fridge/userAction/getRelationToFridge";
+    public static String additemWithBarcodeUrl = ip+"/fridge/fridgeAction/addItemByBarcode";
 
 
 }

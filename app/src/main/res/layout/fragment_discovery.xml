@@ -8,7 +8,7 @@
     android:orientation="vertical" >
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/fridgeToolBar2"
+        android:id="@+id/recordToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -27,7 +27,7 @@
             android:orientation="vertical" >
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_content"
+                android:id="@+id/rv_content2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="5dp">

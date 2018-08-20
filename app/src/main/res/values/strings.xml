@@ -132,10 +132,10 @@
     <string name="activity_picture_history_title_text">冰箱内景拍摄图</string>
     <string name="activity_qr_capture_follow_success">关注成功!</string>
     <string name="activity_qr_code_avaliable_duration">二维码有效时间20分钟\n对方手机客户端扫描二维码，可以关注我的冰箱</string>
-    <string name="activity_qr_code_bottom_text">用京东智能冰箱APP扫描二维码, 加我为亲友</string>
+    <string name="activity_qr_code_bottom_text">用智能冰箱APP扫描二维码, 加我为亲友</string>
     <string name="activity_qr_code_caption">我的冰箱</string>
     <string name="activity_qr_code_hint_line1">使用冰箱APP扫一扫二维码</string>
-    <string name="activity_qr_code_hint_line2">查看我的京东智能冰箱</string>
+    <string name="activity_qr_code_hint_line2">查看我的智能冰箱</string>
     <string name="activity_qr_code_save_text">保存</string>
     <string name="activity_qr_code_tips">对准二维码/条形码到框内即可扫描</string>
     <string name="activity_qr_code_title_text">冰箱二维码</string>
@@ -166,7 +166,7 @@
     <string name="agree_hint">同意</string>
     <string name="already_new_version">已经是最新版本</string>
     <string name="app_name">智能冰箱</string>
-    <string name="app_setting_name">京东智能冰箱</string>
+    <string name="app_setting_name">智能冰箱</string>
     <string name="be_taken_in">拍摄于</string>
     <string name="cancel_exit">取消</string>
     <string name="cancel_signin_toast_text">点击“返回”将中断注册，确认返回？</string>
@@ -208,8 +208,8 @@
     <string name="error_view_refresh">重新加载</string>
     <string name="error_view_service_error">服务器开小差，请稍后再试</string>
     <string name="error_view_service_float_error">服务器异常，冰箱运行状态无法读取</string>
-    <string name="error_view_unbinded_hint">您的京东账号还未绑定冰箱</string>
-    <string name="error_view_unbinded_hint1">请在冰箱端绑定京东账号\n才可以使用此功能！</string>
+    <string name="error_view_unbinded_hint">您的账号还未绑定冰箱</string>
+    <string name="error_view_unbinded_hint1">请在冰箱端绑定账号\n才可以使用此功能！</string>
     <string name="exit_message">确定退出吗？</string>
     <string name="exit_title">提示</string>
     <string name="fast_register_title">手机快速注册</string>
@@ -335,9 +335,9 @@
     <string name="input_message_code_title_text">输入验证码</string>
     <string name="input_message_code_top_hint">请输入%1$s收到的短信验证码:</string>
     <string name="input_phone_number_hint">请输入手机号</string>
-    <string name="input_user_account">请输入京东用户名／手机号／邮箱</string>
+    <string name="input_user_account">请输入用户名／手机号／邮箱</string>
     <string name="input_user_password">请输入密码</string>
-    <string name="jd_service_agreement_unchecked_text">请同意京东用户注册协议</string>
+    <string name="jd_service_agreement_unchecked_text">请同意用户注册协议</string>
     <string name="jd_service_register_title">sjtu_hci用户注册协议及用户隐私政策</string>
     <string name="kepler_check_net">请检查您的网络环境</string>
     <string name="login_agreement">登录即代表您已经同意</string>
@@ -405,7 +405,7 @@
     <string name="skip">跳过</string>
     <string name="spb_default_speed">1</string>
     <string name="tab_control">冰箱控制</string>
-    <string name="tab_control_new">控制</string>
+    <string name="tab_control_new">饮食记录</string>
     <string name="tab_fridge">食物</string>
     <string name="tab_friend">亲友</string>
     <string name="tab_menu">菜谱</string>
@@ -433,5 +433,5 @@
     <string name="title_login">登陆/注册</string>
     <string name="title_register">注册</string>
     <string name="fruit">水果</string>
-    <string name="vegetable">蔬菜</string>
+    <string name="vegetable">条码食物</string>
 </resources>

@@ -210,7 +210,7 @@ public class MeFragment extends Fragment {
                         String g = (String)array.get(i);
                         groups.add(g);
                     }
-                    groups.add(fridge_id);
+                    groups.add("fridge" + fridge_id);
                     faceYoutu.DelPerson(user_id);
                     Bitmap selectedImage = BitmapFactory.decodeFile(myPortrait.getPath());
                     JSONObject response = faceYoutu.NewPerson(selectedImage, user_id, groups);

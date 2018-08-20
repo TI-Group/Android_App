@@ -185,5 +185,9 @@
     <color name="colorAccent">#fff9953a</color>
     <color name="white">#FFFFFF</color>
     <color name="green">#45C01A</color>
+    <color name="hci_red">#b13010</color>
+    <color name="hci_yellow">#bebb10</color>
+    <color name="hci_green">#23a417</color>
     <color name="gray">#999999</color>
+
 </resources>

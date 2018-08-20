@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import io.appetizer.hci_fridge.R;
@@ -40,6 +41,7 @@ public class RoundedRectProgressBar extends View {
                     break;
                 case R.styleable.RoundedRectProgressBar_barColor:
                     barColor = a.getColor(attr, Color.GREEN);
+                    Log.d("AAAAAAAAAAAAAAAAA", barColor+"");
                     break;
                 case R.styleable.RoundedRectProgressBar_textColor:
                     textColor = a.getColor(attr, Color.WHITE);
@@ -94,6 +96,14 @@ public class RoundedRectProgressBar extends View {
         } else {
             this.progress = progress;
         }
+        if(this.progress==0){
+            this.backColor = Color.RED;
+        }else if(this.progress<60){
+            this.barColor = 0xffbebb10;
+        }else{
+            this.barColor = -13382503;
+        }
+
         postInvalidate();
     }
 }

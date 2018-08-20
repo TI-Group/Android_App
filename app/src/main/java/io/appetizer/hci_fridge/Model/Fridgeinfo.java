@@ -17,6 +17,9 @@ public class Fridgeinfo {
         return fridegId;
     }
     public String getNickName(){
+        if(nickName == null || nickName.length() == 0){
+            return fridegId+"";
+        }
         return nickName;
     }
     public void setFridegId(String fridegId){

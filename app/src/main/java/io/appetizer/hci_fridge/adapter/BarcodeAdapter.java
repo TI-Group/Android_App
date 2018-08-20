@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
+
+import io.appetizer.hci_fridge.Model.Barcodeinfo;
 import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
 import io.appetizer.hci_fridge.View.RoundedRectProgressBar;
@@ -21,20 +24,20 @@ import java.util.Date;
  * Created by user on 2018/5/31.
  */
 
-public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> {
+public class BarcodeAdapter extends RecyclerView.Adapter<BarcodeAdapter.MyViewHolder> {
 
     private Context context;
     private OnItemClickListener mOnItemClickListener;
 
 
-    private List<Foodinfo> data;
+    private List<Barcodeinfo> data;
 
-    public FoodAdapter(Context context, List<Foodinfo> data) {
+    public BarcodeAdapter(Context context, List<Barcodeinfo> data) {
         this.context = context;
         this.data = data;
     }
 
-    public void setList(List<Foodinfo> datas){
+    public void setList(List<Barcodeinfo> datas){
         this.data = datas;
     }
 
@@ -46,18 +49,18 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Foodinfo food = data.get(position);
+        Barcodeinfo food = data.get(position);
         holder.itemName.setText(food.getName());
-        holder.itemNum.setText(food.getNum()+"");
+        holder.itemNum.setText(food.getAmount()+"");
         Date now = new Date();
         Date putInTime = food.getPutInTime();
         long interval = (now.getTime() - putInTime.getTime())/1000/60/60;
-        double shelflife = food.getShelflife()*24.0;
-
-
+        double shelflife = 3*24.0;
         double percent = 100 - (interval/shelflife)*100;
         holder.itemTime.setProgress((int)percent);
-        holder.itemImage.setImageResource(itemImageUtil.getImage(food.getItemID()-1));
+        Glide.with(context)
+                .load(food.getImageUrl())
+                .into(holder.itemImage);
         //if (position % 2 == 0) {
         //    holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
         //} else {
@@ -106,7 +109,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
         if(position > data.size()-1) {
             return null;
         }
-        Foodinfo value = data.remove(position);
+        Barcodeinfo value = data.remove(position);
         notifyItemRemoved(position);
         return value.toString();
     }
