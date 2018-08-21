@@ -145,7 +145,7 @@ public class DiscoveryFragment extends Fragment {
         mContentRv = (RecyclerView) view.findViewById(R.id.rv_content2);
         mContentRv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         mContentRv.setHasFixedSize(true);
-        dailyAdapter = new DailyAdapter(dailyList);
+        dailyAdapter = new DailyAdapter(this.getContext(), dailyList);
         mContentRv.setAdapter(dailyAdapter);
     }
 }

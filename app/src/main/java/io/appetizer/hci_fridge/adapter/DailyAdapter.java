@@ -1,5 +1,6 @@
 package io.appetizer.hci_fridge.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,11 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import io.appetizer.hci_fridge.Model.Dailyinfo;
 import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
+import io.appetizer.hci_fridge.util.Urlpath;
 import io.appetizer.hci_fridge.util.itemImageUtil;
 
 
@@ -21,13 +25,14 @@ import io.appetizer.hci_fridge.util.itemImageUtil;
 
 public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> {
     private List<Dailyinfo> data;
-    public DailyAdapter(List<Dailyinfo> objects) {
+    private Context context;
+    public DailyAdapter(Context context, List<Dailyinfo> objects) {
         this.data = objects;
+        this.context = context;
     }
 
     public void setList(List<Dailyinfo> datas){
-        data.clear();
-        data.addAll(datas);
+        this.data = datas;
     }
 
     //创建新View，被LayoutManager所调用
@@ -45,6 +50,9 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
         viewHolder.foodNum.setText(food.getNum()+"");
         viewHolder.fridgeID.setText(food.getFridgeID()+"");
         viewHolder.time.setText(food.getTime());
+        Glide.with(context)
+                .load(Urlpath.imageUrl+food.getName()+".png")
+                .into(viewHolder.foodImage);
         viewHolder.foodImage.setImageResource(itemImageUtil.getImage(food.getItemID()-1));
     }
     //获取数据的数量

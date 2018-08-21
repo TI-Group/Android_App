@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 import io.appetizer.hci_fridge.Model.Foodinfo;
 import io.appetizer.hci_fridge.R;
 import io.appetizer.hci_fridge.View.RoundedRectProgressBar;
+import io.appetizer.hci_fridge.util.Urlpath;
 import io.appetizer.hci_fridge.util.itemImageUtil;
 import java.util.Date;
 
@@ -36,6 +39,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
 
     public void setList(List<Foodinfo> datas){
         this.data = datas;
+        System.out.println("DebugDDDDD " + data.size());
     }
 
     @Override
@@ -46,6 +50,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
+        System.out.println("DebugDD "+position  + data.size());
         Foodinfo food = data.get(position);
         holder.itemName.setText(food.getName());
         holder.itemNum.setText(food.getNum()+"");
@@ -57,7 +62,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
 
         double percent = 100 - (interval/shelflife)*100;
         holder.itemTime.setProgress((int)percent);
-        holder.itemImage.setImageResource(itemImageUtil.getImage(food.getItemID()-1));
+        Glide.with(context)
+                .load(Urlpath.imageUrl+food.getName()+".png")
+                .into(holder.itemImage);
         //if (position % 2 == 0) {
         //    holder.itemImage.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
         //} else {
